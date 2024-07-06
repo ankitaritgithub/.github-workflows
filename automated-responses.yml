@@ -1,0 +1,45 @@
+yaml
+
+name: Automated Responses Bot
+
+on:
+
+issue_comment:
+
+types: [created]
+
+jobs:
+
+respond:
+
+runs-on: ubuntu-latest
+
+steps:
+
+- name: Check out repository
+
+uses: actions/checkout@v2
+
+- name: Respond to comment
+
+uses: actions/github-script@v4
+
+with:
+
+github-token: ${{ secrets.GITHUB_TOKEN }}
+
+script: |
+
+const message = "Hello! Thank you for your comment.";
+
+github.issues.createComment({
+
+issue_number: context.issue.number,
+
+owner: context.repo.owner,
+
+repo: context.repo.repo,
+
+body: message
+
+});
