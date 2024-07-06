@@ -1,0 +1,33 @@
+name: Responder Bot
+
+on:
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Respond to comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get the comment text
+          comment_text=$(github.event.comment.body)
+
+          # Define pre-defined responses
+          responses=(
+            "Hello! How can I help you?"
+            "What's up?"
+            "I'm here to assist you!"
+          )
+
+          # Respond to the comment
+          for response in "${responses[@]}"; do
+            if echo "$comment_text" | grep -q "@coderabbitai"; then
+              github.actions.comment.create $response
+            fi
+          done
